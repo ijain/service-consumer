@@ -1,0 +1,2 @@
+#!/bin/bash
+docker exec -it consumer-service-php-fpm composer $@

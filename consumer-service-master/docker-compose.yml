@@ -1,0 +1,33 @@
+version: "3.1"
+services:
+    consumer-mariadb:
+      image: mariadb:10.1
+      container_name: consumer-service-mariadb
+      working_dir: /consumer
+      volumes:
+        - .:/consumer
+      environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=consumer
+        - MYSQL_USER=consumer
+        - MYSQL_PASSWORD=root
+      ports:
+        - "8006:3306"
+
+    consumer-webserver:
+      image: nginx:stable
+      container_name: consumer-service-webserver
+      working_dir: /consumer
+      volumes:
+          - .:/consumer
+          - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8011:80"
+
+    consumer-php-fpm:
+      build: docker/php-fpm
+      container_name: consumer-service-php-fpm
+      working_dir: /consumer
+      volumes:
+        - .:/consumer
+        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
